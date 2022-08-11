@@ -19,7 +19,7 @@ options.UseNpgsql(connectionString));
 
 
 
-
+// compile program
 
 var app = builder.Build();
 
@@ -34,10 +34,11 @@ app.UseHttpsRedirection();
 
 app.MapPost("/employees/", async (Employee e, OfficeDb db) =>
 {
-    db.Employees.Add(e);
-    await db.SaveChangesAsync();
-
-    return Results.Created($"/employees/{e.Id}", e);
+    
+    if (e.Id is not null)
+        db.Employees.Add(e);
+        await db.SaveChangesAsync();
+        return Results.Created($"/employees/{e.Id}", e);
 });
 
 app.MapGet("/employee/{id:int}", async (int id, OfficeDb db) => 
@@ -49,7 +50,7 @@ app.MapGet("/employee/{id:int}", async (int id, OfficeDb db) =>
 app.MapGet("/employees", async (OfficeDb db) => await db.Employees.ToListAsync());  
 
 app.MapPut("/employees/{id:int}", async(int id, Employee e, OfficeDb db)=>{
-    if (e.Id != id)
+    if (e.Id != id) 
         return Results.BadRequest();
     var employee = await db.Employees.FindAsync(id);
     if (employee is null) return Results.NotFound();

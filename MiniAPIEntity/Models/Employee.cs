@@ -4,10 +4,9 @@ namespace MiniAPIEntity.Models
 {
     public class Employee
     {
+        [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Key, Column(Order = 0)]
-        public int Id { get; set; }
-       
+        public int? Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Branch { get; set; }
